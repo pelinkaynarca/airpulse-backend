@@ -12,12 +12,12 @@ import org.hibernate.annotations.CreationTimestamp;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "air_quality_record")
+@Table(name = "air_quality_measurement")
 @Getter
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
-public class AirQualityRecord {
+public class AirQualityMeasurement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -2,7 +2,7 @@ package com.airpulse.backend.dto;
 
 import java.time.LocalDateTime;
 
-public record AirQualityRecordRequest(
+public record AirQualityMeasurementRequest(
         double latitude,
         double longitude,
         double pm25,

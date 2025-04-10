@@ -1,9 +1,9 @@
 package com.airpulse.backend.repository;
 
-import com.airpulse.backend.entity.AirQualityRecord;
+import com.airpulse.backend.entity.AirQualityMeasurement;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 
 @Repository
-public interface AirQualityRecordRepository extends JpaRepository<AirQualityRecord, Long> {
+public interface AirQualityMeasurementRepository extends JpaRepository<AirQualityMeasurement, Long> {
 }
