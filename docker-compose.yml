@@ -1,6 +1,19 @@
 services:
+  rabbitmq:
+    image: rabbitmq:4.0-management
+    container_name: rabbitmq
+    environment:
+      RABBITMQ_DEFAULT_USER: ${RABBITMQ_USER}
+      RABBITMQ_DEFAULT_PASS: ${RABBITMQ_PASSWORD}
+    ports:
+      - "5672:5672"  # main port
+      - "15672:15672"  # management interface
+    networks:
+      - airpulse-network
+    restart: always
+
   timescaledb:
-    image: timescale/timescaledb:latest-pg14
+    image: timescale/timescaledb:latest-pg17
     container_name: airpulse-db
     environment:
       POSTGRES_DB: ${POSTGRES_DB}
@@ -12,6 +25,7 @@ services:
       - timescaledb-data:/var/lib/postgresql/data
     networks:
       - airpulse-network
+    restart: always
 
   backend:
     build:
@@ -22,12 +36,15 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${POSTGRES_DB}
       SPRING_DATASOURCE_USERNAME: ${POSTGRES_USER}
       SPRING_DATASOURCE_PASSWORD: ${POSTGRES_PASSWORD}
+      SPRING_RABBITMQ_HOST: rabbitmq
     ports:
       - "8080:8080"
     depends_on:
+      - rabbitmq
       - timescaledb
     networks:
       - airpulse-network
+    restart: always
 
 volumes:
   timescaledb-data:

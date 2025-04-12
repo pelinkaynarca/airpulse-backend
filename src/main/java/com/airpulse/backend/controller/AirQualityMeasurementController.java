@@ -10,13 +10,13 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/air-quality")
+@RequestMapping("/api/air-quality-measurements")
 @RequiredArgsConstructor
 public class AirQualityMeasurementController {
 
     private final AirQualityMeasurementService airQualityMeasurementService;
 
-    @PostMapping("/add")
+    @PostMapping
     public ResponseEntity<String> addAirQualityMeasurement(@RequestBody AirQualityMeasurementRequest request) {
         airQualityMeasurementService.addAirQualityMeasurement(request);
         return ResponseEntity.ok("Air Quality Measurement added successfully!");
