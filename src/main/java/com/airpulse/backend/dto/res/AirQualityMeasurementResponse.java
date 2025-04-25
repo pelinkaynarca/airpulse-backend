@@ -1,8 +1,9 @@
-package com.airpulse.backend.dto;
+package com.airpulse.backend.dto.res;
 
 import java.time.LocalDateTime;
 
-public record AirQualityMeasurementRequest(
+public record AirQualityMeasurementResponse(
+        Long id,
         double latitude,
         double longitude,
         double pm25,
@@ -10,6 +11,6 @@ public record AirQualityMeasurementRequest(
         double no2,
         double so2,
         double o3,
-        LocalDateTime timestamp
-) {
-}
+        LocalDateTime timestamp,
+        boolean anomalyDetected
+) {}
