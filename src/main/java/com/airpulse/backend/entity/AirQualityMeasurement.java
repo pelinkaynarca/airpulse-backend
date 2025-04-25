@@ -48,4 +48,7 @@ public class AirQualityMeasurement {
     @CreationTimestamp
     private LocalDateTime createdAt;
 
+    @Column(name = "anomaly_detected")
+    private boolean anomalyDetected;
+
 }
