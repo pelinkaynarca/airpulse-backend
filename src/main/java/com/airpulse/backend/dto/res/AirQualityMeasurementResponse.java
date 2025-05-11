@@ -1,16 +1,14 @@
 package com.airpulse.backend.dto.res;
 
+import com.airpulse.backend.enums.AirQualityParameter;
+
 import java.time.LocalDateTime;
 
 public record AirQualityMeasurementResponse(
         Long id,
-        double latitude,
-        double longitude,
-        double pm25,
-        double pm10,
-        double no2,
-        double so2,
-        double o3,
-        LocalDateTime timestamp,
-        boolean anomalyDetected
+        AirQualityParameter parameter,
+        Double value,
+        Double latitude,
+        Double longitude,
+        LocalDateTime createdAt
 ) {}
