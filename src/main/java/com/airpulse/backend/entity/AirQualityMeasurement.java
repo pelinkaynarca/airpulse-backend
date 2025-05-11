@@ -1,12 +1,8 @@
 package com.airpulse.backend.entity;
 
-import jakarta.persistence.Entity;
-import lombok.AllArgsConstructor;
-import lombok.Getter;
-import lombok.NoArgsConstructor;
-import lombok.Setter;
-
+import com.airpulse.backend.enums.AirQualityParameter;
 import jakarta.persistence.*;
+import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
 import java.time.LocalDateTime;
@@ -17,38 +13,26 @@ import java.time.LocalDateTime;
 @Setter
 @NoArgsConstructor
 @AllArgsConstructor
+@Builder
 public class AirQualityMeasurement {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @Column(name = "latitude", nullable = false)
+    @Enumerated(EnumType.STRING)
+    @Column(nullable = false)
+    private AirQualityParameter parameter;
+
+    @Column(nullable = false)
+    private Double value;
+
+    @Column(nullable = false)
     private Double latitude;
 
-    @Column(name = "longitude", nullable = false)
+    @Column(nullable = false)
     private Double longitude;
 
-    @Column(name = "pm2_5", nullable = false)
-    private Double pm25; // particulate matter 2.5
-
-    @Column(name = "pm10", nullable = false)
-    private Double pm10; // particulate matter 10
-
-    @Column(name = "no2", nullable = false)
-    private Double no2; // nitrogen dioxide
-
-    @Column(name = "so2", nullable = false)
-    private Double so2; // sulfur dioxide
-
-    @Column(name = "o3", nullable = false)
-    private Double o3; // ozone
-
-    @Column(name = "created_at")
     @CreationTimestamp
     private LocalDateTime createdAt;
-
-    @Column(name = "anomaly_detected")
-    private boolean anomalyDetected;
-
 }
