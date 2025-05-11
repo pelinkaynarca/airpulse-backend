@@ -1,43 +1,37 @@
-    package com.airpulse.backend.entity;
+package com.airpulse.backend.entity;
 
-    import com.airpulse.backend.enums.AnomalyType;
-    import jakarta.persistence.*;
-    import lombok.AllArgsConstructor;
-    import lombok.Getter;
-    import lombok.NoArgsConstructor;
-    import lombok.Setter;
-    import org.hibernate.annotations.CreationTimestamp;
+import com.airpulse.backend.enums.AnomalyType;
+import jakarta.persistence.*;
+import lombok.*;
+import org.hibernate.annotations.CreationTimestamp;
 
-    import java.time.LocalDateTime;
+import java.time.LocalDateTime;
 
-    @Entity
-    @Table(name = "anomaly_record")
-    @Getter
-    @Setter
-    @NoArgsConstructor
-    @AllArgsConstructor
-    public class AnomalyRecord {
+@Entity
+@Table(name = "anomaly_record")
+@Getter
+@Setter
+@NoArgsConstructor
+@AllArgsConstructor
+@Builder
+public class AnomalyRecord {
 
-        @Id
-        @GeneratedValue(strategy = GenerationType.IDENTITY)
-        private Long id;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
 
-        @ManyToOne(fetch = FetchType.LAZY)
-        @JoinColumn(name = "measurement_id", nullable = false)
-        private AirQualityMeasurement measurement;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "measurement_id", nullable = false)
+    private AirQualityMeasurement measurement;
 
-        @Enumerated(EnumType.STRING)
-        @Column(nullable = false)
-        private AnomalyType anomalyType;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "anomaly_type", nullable = false)
+    private AnomalyType anomalyType;
 
-        @Column(nullable = false)
-        private Double value;
+    @Column(name = "deviation_percentage")
+    private Double deviationPercentage;
 
-        private Double referenceValue;
-
-        private Double deviationPercentage;
-
-        @Column(nullable = false)
-        @CreationTimestamp
-        private LocalDateTime detectedAt;
-    }
+    @Column(name = "detected_at", nullable = false)
+    @CreationTimestamp
+    private LocalDateTime detectedAt;
+}
