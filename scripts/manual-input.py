@@ -1,28 +1,42 @@
 #!/usr/bin/env python3
 """
+Manual input script for adding air quality measurements
+
 Usage:
-    python scripts/manual-input.py <latitude> <longitude> <pm2_5> <pm10> <no2> <so2> <o3>
+    python scripts/manual-input.py <latitude> <longitude> <parameter> <value>
 Example:
-    python scripts/manual-input.py 40.7128 -74.0060 12.5 25.0 40.0 20.0 33.0
+    python scripts/manual-input.py 40.7128 -74.0060 PM2.5 25.0
 """
 
 import sys
 import subprocess
 import json
 import re
-from datetime import datetime
+from datetime import datetime, timezone
 
 SERVICE_NAME = "backend"
 API_PORT = 8080
 ENDPOINT = "/api/air-quality-measurements"
 
+VALID_PARAMETERS = ["PM2.5", "PM10", "NO2", "SO2", "O3"]
+
 def print_usage():
-    print("Usage: python scripts/manual-input.py <latitude> <longitude> <pm2_5> <pm10> <no2> <so2> <o3>")
-    print("Example: python scripts/manual-input.py 40.7128 -74.0060 12.5 25.0 40.0 20.0 33.0")
+    print("Usage: python scripts/manual-input.py <latitude> <longitude> <parameter> <value>")
+    print("Example: python scripts/manual-input.py 40.7128 -74.0060 PM2.5 25.0")
+    print(f"Valid parameters: {', '.join(VALID_PARAMETERS)}")
 
 def validate_float(value, name):
-    if not re.match(r'^-?\d+(\.\d+)?$', value):
+    try:
+        float(value)
+        return True
+    except ValueError:
         print(f"Error: {name} must be a valid number.")
+        return False
+
+def validate_parameter(parameter):
+    if parameter not in VALID_PARAMETERS:
+        print(f"Error: Invalid parameter '{parameter}'")
+        print(f"Valid parameters are: {', '.join(VALID_PARAMETERS)}")
         return False
     return True
 
@@ -38,30 +52,42 @@ def check_docker_compose_running():
         print(f"Error checking Docker Compose status: {e}")
         return False
 
-def create_payload(lat, lon, pm25, pm10, no2, so2, o3):
-    timestamp = datetime.utcnow().isoformat()
-    return {
+def create_payload(lat, lon, parameter, value):
+    payload = {
+        "parameter": parameter,
+        "value": float(value),
         "latitude": float(lat),
         "longitude": float(lon),
-        "pm25": float(pm25),
-        "pm10": float(pm10),
-        "no2": float(no2),
-        "so2": float(so2),
-        "o3": float(o3),
-        "createdAt": timestamp
+        "createdAt": datetime.now(timezone.utc).isoformat()
     }
+    return payload
 
 def send_data_to_api(payload):
     payload_json = json.dumps(payload)
 
-    cmd = f"""
+    # install curl if it's not available
+    install_cmd = f"""
     if ! command -v curl &> /dev/null; then
         echo 'Installing curl...'
-        apk add --no-cache curl
+        apk update && apk add --no-cache curl
     fi
+    """
 
+    try:
+        subprocess.run(
+            ["docker-compose", "exec", "-T", SERVICE_NAME, "sh", "-c", install_cmd],
+            capture_output=True,
+            text=True
+        )
+    except Exception as e:
+        print(f"Warning: Could not install curl: {e}")
+
+    # Send the request
+    cmd = f"""
     curl -X POST http://localhost:{API_PORT}{ENDPOINT} \\
         -H 'Content-Type: application/json' \\
+        -w "\\nHTTP Status: %{{http_code}}\\n" \\
+        -s \\
         -d '{payload_json}'
     """
 
@@ -72,43 +98,70 @@ def send_data_to_api(payload):
             text=True
         )
 
+        print(f"\n📊 Response:")
+        print(result.stdout)
+
         if result.returncode == 0:
-            print("\n✅ Data successfully sent!")
-            if result.stdout.strip():
-                print("Response:", result.stdout.strip())
-            return True
+            if "HTTP Status: 201" in result.stdout:
+                print("\n✅ Measurement created successfully!")
+                return True
+            elif "HTTP Status: 202" in result.stdout:
+                print("\n✅ Measurement queued successfully!")
+                return True
+            else:
+                print("\n⚠️  Check the response above for details.")
+                return False
         else:
-            print("\n❌ Failed to send data.")
+            print("\n❌ Failed to send measurement.")
             if result.stderr.strip():
                 print("Error:", result.stderr.strip())
             return False
     except Exception as e:
-        print(f"\n❌ Error executing command: {e}")
+        print(f"\n❌ Error: {e}")
         return False
 
 def main():
-    if len(sys.argv) != 8:
+    if len(sys.argv) != 5:
         print_usage()
         sys.exit(1)
 
-    lat, lon, pm25, pm10, no2, so2, o3 = sys.argv[1:]
+    lat, lon, parameter, value = sys.argv[1:]
 
-    for val, name in zip([lat, lon, pm25, pm10, no2, so2, o3],
-                         ["Latitude", "Longitude", "PM2.5", "PM10", "NO2", "SO2", "O3"]):
-        if not validate_float(val, name):
-            sys.exit(1)
+    # Validate inputs
+    if not validate_float(lat, "Latitude"):
+        sys.exit(1)
+    if not validate_float(lon, "Longitude"):
+        sys.exit(1)
+    if not validate_float(value, "Value"):
+        sys.exit(1)
+    if not validate_parameter(parameter):
+        sys.exit(1)
+
+    # Validate ranges
+    lat_f, lon_f, value_f = float(lat), float(lon), float(value)
+    if not (-90 <= lat_f <= 90):
+        print("Error: Latitude must be between -90 and 90")
+        sys.exit(1)
+    if not (-180 <= lon_f <= 180):
+        print("Error: Longitude must be between -180 and 180")
+        sys.exit(1)
+    if value_f < 0:
+        print("Error: Value must be greater than or equal to 0")
+        sys.exit(1)
 
     if not check_docker_compose_running():
         print(f"Error: Docker Compose service '{SERVICE_NAME}' is not running.")
         print("Start it with: docker-compose up -d")
         sys.exit(1)
 
-    payload = create_payload(lat, lon, pm25, pm10, no2, so2, o3)
+    payload = create_payload(lat, lon, parameter, value)
 
-    print("Sending full air quality data:")
+    print(f"\nSending measurement:")
     print(json.dumps(payload, indent=2))
 
     if not send_data_to_api(payload):
+        print("\n🔍 To debug further, check the backend logs with:")
+        print("docker-compose logs backend -f")
         sys.exit(1)
 
 if __name__ == "__main__":
