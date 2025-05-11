@@ -12,7 +12,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -35,14 +35,6 @@ public class AirQualityMeasurementController {
         return ResponseEntity.accepted().build();
     }
 
-//    // for testing
-//    @PostMapping("/direct")
-//    public ResponseEntity<Void> addMeasurementDirect(
-//            @Valid @RequestBody AirQualityMeasurementRequest request) {
-//        airQualityMeasurementService.addAirQualityMeasurement(request);
-//        return ResponseEntity.status(201).build();
-//    }
-
     @GetMapping("/all")
     public ResponseEntity<List<AirQualityMeasurementResponse>> getAllMeasurements() {
         return ResponseEntity.ok(airQualityMeasurementService.getAllMeasurements());
@@ -51,8 +43,8 @@ public class AirQualityMeasurementController {
     @GetMapping("/parameter")
     public ResponseEntity<List<AirQualityMeasurementResponse>> getMeasurementsByParameter(
             @RequestParam AirQualityParameter parameter,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
 
         List<AirQualityMeasurementResponse> measurements =
                 airQualityMeasurementService.getMeasurementsByParameter(parameter, start, end);
@@ -66,8 +58,8 @@ public class AirQualityMeasurementController {
             @RequestParam Double maxLat,
             @RequestParam Double minLon,
             @RequestParam Double maxLon,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
 
         List<AirQualityMeasurementResponse> measurements =
                 airQualityMeasurementService.getMeasurementsInRegion(minLat, maxLat, minLon, maxLon, start, end);
@@ -98,8 +90,8 @@ public class AirQualityMeasurementController {
             @RequestParam Double maxLat,
             @RequestParam Double minLon,
             @RequestParam Double maxLon,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
 
         Double average = airQualityMeasurementService.calculateAverageForParameterInRegionAndTimeframe(
                 parameter, minLat, maxLat, minLon, maxLon, start, end);

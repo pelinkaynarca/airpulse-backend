@@ -7,13 +7,13 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Repository
 public interface AnomalyRecordRepository extends JpaRepository<AnomalyRecord, Long> {
 
-    List<AnomalyRecord> findByDetectedAtBetween(LocalDateTime start, LocalDateTime end);
+    List<AnomalyRecord> findByDetectedAtBetween(Instant start, Instant end);
 
     List<AnomalyRecord> findByAnomalyType(AnomalyType anomalyType);
 
@@ -38,8 +38,8 @@ public interface AnomalyRecordRepository extends JpaRepository<AnomalyRecord, Lo
             @Param("maxLat") Double maxLat,
             @Param("minLon") Double minLon,
             @Param("maxLon") Double maxLon,
-            @Param("start") LocalDateTime start,
-            @Param("end") LocalDateTime end);
+            @Param("start") Instant start,
+            @Param("end") Instant end);
 
     @Query("SELECT a FROM AnomalyRecord a JOIN a.measurement m " +
             "WHERE m.parameter = :parameter")
@@ -50,6 +50,6 @@ public interface AnomalyRecordRepository extends JpaRepository<AnomalyRecord, Lo
             "AND a.detectedAt BETWEEN :start AND :end")
     List<AnomalyRecord> findByParameterAndTimeframe(
             @Param("parameter") String parameter,
-            @Param("start") LocalDateTime start,
-            @Param("end") LocalDateTime end);
+            @Param("start") Instant start,
+            @Param("end") Instant end);
 }

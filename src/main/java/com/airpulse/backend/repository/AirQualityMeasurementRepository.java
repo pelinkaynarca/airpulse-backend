@@ -7,7 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -20,16 +20,16 @@ public interface AirQualityMeasurementRepository extends JpaRepository<AirQualit
             Double maxLatitude,
             Double minLongitude,
             Double maxLongitude,
-            LocalDateTime startTime,
-            LocalDateTime endTime
+            Instant startTime,
+            Instant endTime
     );
 
     List<AirQualityMeasurement> findByParameter(AirQualityParameter parameter);
 
     List<AirQualityMeasurement> findByParameterAndCreatedAtBetween(
             AirQualityParameter parameter,
-            LocalDateTime startTime,
-            LocalDateTime endTime
+            Instant startTime,
+            Instant endTime
     );
 
     List<AirQualityMeasurement> findByLatitudeBetweenAndLongitudeBetween(
@@ -44,8 +44,8 @@ public interface AirQualityMeasurementRepository extends JpaRepository<AirQualit
             Double maxLatitude,
             Double minLongitude,
             Double maxLongitude,
-            LocalDateTime startTime,
-            LocalDateTime endTime
+            Instant startTime,
+            Instant endTime
     );
 
     @Query(value = "SELECT * FROM air_quality_measurement m " +
@@ -74,7 +74,7 @@ public interface AirQualityMeasurementRepository extends JpaRepository<AirQualit
             @Param("maxLat") Double maxLat,
             @Param("minLon") Double minLon,
             @Param("maxLon") Double maxLon,
-            @Param("start") LocalDateTime start,
-            @Param("end") LocalDateTime end
+            @Param("start") Instant start,
+            @Param("end") Instant end
     );
 }

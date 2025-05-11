@@ -16,7 +16,7 @@ public interface AnomalyRecordMapper {
     AnomalyRecordResponse mapEntityToResponse(AnomalyRecord anomalyRecord);
 
     @Mapping(target = "id", ignore = true)
-    @Mapping(target = "detectedAt", expression = "java(LocalDateTime.now())")
+    @Mapping(target = "detectedAt", ignore = true)
     @Mapping(source = "measurement", target = "measurement")
     @Mapping(source = "anomalyType", target = "anomalyType")
     @Mapping(source = "deviationPercentage", target = "deviationPercentage")

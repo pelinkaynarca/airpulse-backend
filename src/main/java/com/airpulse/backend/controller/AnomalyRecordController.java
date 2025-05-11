@@ -9,7 +9,7 @@ import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @RestController
@@ -29,8 +29,8 @@ public class AnomalyRecordController {
 
     @GetMapping("/timeframe")
     public ResponseEntity<List<AnomalyRecordResponse>> getAnomaliesByTimeframe(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
+            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
         List<AnomalyRecordResponse> anomalies = anomalyRecordService.getByTimeframe(start, end);
         return ResponseEntity.ok(anomalies);
     }
@@ -41,8 +41,8 @@ public class AnomalyRecordController {
             @RequestParam Double maxLat,
             @RequestParam Double minLon,
             @RequestParam Double maxLon,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
         List<AnomalyRecordResponse> anomalies = anomalyRecordService.getInRegion(
                 minLat, maxLat, minLon, maxLon, start, end);
         return ResponseEntity.ok(anomalies);
@@ -51,8 +51,8 @@ public class AnomalyRecordController {
     @GetMapping("/parameter/{parameter}")
     public ResponseEntity<List<AnomalyRecordResponse>> getAnomaliesByParameter(
             @PathVariable String parameter,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime start,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) LocalDateTime end) {
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
+            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
         List<AnomalyRecordResponse> anomalies = anomalyRecordService.getByParameter(parameter, start, end);
         return ResponseEntity.ok(anomalies);
     }

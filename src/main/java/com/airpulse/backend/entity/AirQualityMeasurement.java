@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "air_quality_measurement")
@@ -34,5 +34,5 @@ public class AirQualityMeasurement {
     private Double longitude;
 
     @CreationTimestamp
-    private LocalDateTime createdAt;
+    private Instant createdAt;
 }

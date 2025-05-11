@@ -5,7 +5,7 @@ import jakarta.persistence.*;
 import lombok.*;
 import org.hibernate.annotations.CreationTimestamp;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 @Entity
 @Table(name = "anomaly_record")
@@ -33,5 +33,5 @@ public class AnomalyRecord {
 
     @Column(name = "detected_at", nullable = false)
     @CreationTimestamp
-    private LocalDateTime detectedAt;
+    private Instant detectedAt;
 }

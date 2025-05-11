@@ -14,7 +14,7 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 @Service
@@ -63,8 +63,8 @@ public class AirQualityMeasurementServiceImpl implements AirQualityMeasurementSe
     @Override
     public List<AirQualityMeasurementResponse> getMeasurementsByParameter(
             AirQualityParameter parameter,
-            LocalDateTime startTime,
-            LocalDateTime endTime) {
+            Instant startTime,
+            Instant endTime) {
 
         List<AirQualityMeasurement> measurements;
 
@@ -86,8 +86,8 @@ public class AirQualityMeasurementServiceImpl implements AirQualityMeasurementSe
             Double maxLatitude,
             Double minLongitude,
             Double maxLongitude,
-            LocalDateTime startTime,
-            LocalDateTime endTime) {
+            Instant startTime,
+            Instant endTime) {
 
         List<AirQualityMeasurement> measurements;
 
@@ -120,8 +120,8 @@ public class AirQualityMeasurementServiceImpl implements AirQualityMeasurementSe
             Double maxLatitude,
             Double minLongitude,
             Double maxLongitude,
-            LocalDateTime startTime,
-            LocalDateTime endTime) {
+            Instant startTime,
+            Instant endTime) {
 
         return airQualityMeasurementRepository.calculateAverageForParameterInRegionAndTimeframe(
                 parameter, minLatitude, maxLatitude, minLongitude, maxLongitude, startTime, endTime);

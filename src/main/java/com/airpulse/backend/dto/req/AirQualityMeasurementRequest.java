@@ -4,15 +4,14 @@ import com.airpulse.backend.enums.AirQualityParameter;
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
 import jakarta.validation.constraints.NotNull;
-import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.PositiveOrZero;
 
 import java.io.Serializable;
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public record AirQualityMeasurementRequest(
 
-        @NotEmpty(message = "Parameter cannot be empty")
+        @NotNull(message = "Parameter cannot be null")
         AirQualityParameter parameter,
 
         @PositiveOrZero(message = "Value must be greater than or equal to 0")
@@ -26,7 +25,7 @@ public record AirQualityMeasurementRequest(
         @DecimalMax(value = "180.0", message = "Longitude must be between -180.0 and 180.0")
         Double longitude,
 
-        LocalDateTime timestamp
+        Instant createdAt
 
 ) implements Serializable {
 }

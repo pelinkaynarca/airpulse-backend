@@ -2,7 +2,7 @@ package com.airpulse.backend.dto.res;
 
 import com.airpulse.backend.enums.AirQualityParameter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 
 public record AirQualityMeasurementResponse(
         Long id,
@@ -10,5 +10,5 @@ public record AirQualityMeasurementResponse(
         Double value,
         Double latitude,
         Double longitude,
-        LocalDateTime createdAt
+        Instant createdAt
 ) {}

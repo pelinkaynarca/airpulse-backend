@@ -4,7 +4,7 @@ import com.airpulse.backend.dto.req.AirQualityMeasurementRequest;
 import com.airpulse.backend.dto.res.AirQualityMeasurementResponse;
 import com.airpulse.backend.enums.AirQualityParameter;
 
-import java.time.LocalDateTime;
+import java.time.Instant;
 import java.util.List;
 
 public interface AirQualityMeasurementService {
@@ -18,8 +18,8 @@ public interface AirQualityMeasurementService {
     // startTime and endTime can be null
     List<AirQualityMeasurementResponse> getMeasurementsByParameter(
             AirQualityParameter parameter,
-            LocalDateTime startTime,
-            LocalDateTime endTime
+            Instant startTime,
+            Instant endTime
     );
 
     // startTime and endTime can be null
@@ -28,8 +28,8 @@ public interface AirQualityMeasurementService {
             Double maxLatitude,
             Double minLongitude,
             Double maxLongitude,
-            LocalDateTime startTime,
-            LocalDateTime endTime
+            Instant startTime,
+            Instant endTime
     );
 
     List<AirQualityMeasurementResponse> getLatestMeasurements(int limit);
@@ -40,7 +40,7 @@ public interface AirQualityMeasurementService {
             Double maxLatitude,
             Double minLongitude,
             Double maxLongitude,
-            LocalDateTime startTime,
-            LocalDateTime endTime
+            Instant startTime,
+            Instant endTime
     );
 }
