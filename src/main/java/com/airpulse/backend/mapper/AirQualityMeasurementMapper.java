@@ -4,12 +4,15 @@ import com.airpulse.backend.dto.req.AirQualityMeasurementRequest;
 import com.airpulse.backend.dto.res.AirQualityMeasurementResponse;
 import com.airpulse.backend.entity.AirQualityMeasurement;
 import org.mapstruct.Mapper;
+import org.mapstruct.factory.Mappers;
 
-@Mapper(componentModel = "spring")
+@Mapper
 public interface AirQualityMeasurementMapper {
 
-    AirQualityMeasurement toEntity(AirQualityMeasurementRequest request);
+    AirQualityMeasurementMapper INSTANCE = Mappers.getMapper(AirQualityMeasurementMapper.class);
 
-    AirQualityMeasurementResponse toResponse(AirQualityMeasurement measurement);
+    AirQualityMeasurement mapRequestToEntity(AirQualityMeasurementRequest request);
+
+    AirQualityMeasurementResponse mapEntityToResponse(AirQualityMeasurement measurement);
 
 }
