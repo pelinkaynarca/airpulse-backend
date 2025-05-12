@@ -60,7 +60,7 @@ public interface AirQualityMeasurementRepository extends JpaRepository<AirQualit
             @Param("longitude") double longitude,
             @Param("radius") double radius);
 
-    @Query("SELECT m FROM AirQualityMeasurement m ORDER BY m.createdAt DESC LIMIT :limit")
+    @Query(value = "SELECT * FROM air_quality_measurement ORDER BY created_at DESC LIMIT :limit", nativeQuery = true)
     List<AirQualityMeasurement> findLatestMeasurements(@Param("limit") int limit);
 
     @Query("SELECT AVG(m.value) FROM AirQualityMeasurement m " +
