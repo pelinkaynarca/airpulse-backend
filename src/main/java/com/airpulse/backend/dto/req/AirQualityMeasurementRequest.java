@@ -23,9 +23,7 @@ public record AirQualityMeasurementRequest(
 
         @DecimalMin(value = "-180.0", message = "Longitude must be between -180.0 and 180.0")
         @DecimalMax(value = "180.0", message = "Longitude must be between -180.0 and 180.0")
-        Double longitude,
-
-        Instant createdAt
+        Double longitude
 
 ) implements Serializable {
 }
