@@ -3,6 +3,7 @@ package com.airpulse.backend.service.impl;
 import com.airpulse.backend.dto.res.AnomalyRecordResponse;
 import com.airpulse.backend.entity.AirQualityMeasurement;
 import com.airpulse.backend.entity.AnomalyRecord;
+import com.airpulse.backend.enums.AirQualityParameter;
 import com.airpulse.backend.enums.AnomalyType;
 import com.airpulse.backend.event.AnomalyDetectedEvent;
 import com.airpulse.backend.exception.ResourceNotFoundException;
@@ -35,12 +36,11 @@ public class AnomalyRecordServiceImpl implements AnomalyRecordService {
                 event.getMeasurementId(), event.getDetectedAnomalies().size());
 
         try {
-            // Fetch the actual measurement entity
             AirQualityMeasurement measurement = measurementRepository.findById(event.getMeasurementId())
                     .orElseThrow(() -> new ResourceNotFoundException(
                             "Measurement not found with ID: " + event.getMeasurementId()));
 
-            // Create a separate anomaly record for each detected anomaly type
+            // create separate anomaly record for each detected anomaly type
             for (Map.Entry<AnomalyType, Double> entry : event.getDetectedAnomalies().entrySet()) {
                 AnomalyType anomalyType = entry.getKey();
                 Double deviationPercentage = entry.getValue();
@@ -101,9 +101,9 @@ public class AnomalyRecordServiceImpl implements AnomalyRecordService {
 
     @Override
     @Transactional(readOnly = true)
-    public List<AnomalyRecordResponse> getByParameter(String parameter, Instant start, Instant end) {
-        if (parameter == null || parameter.trim().isEmpty()) {
-            throw new IllegalArgumentException("Parameter cannot be null or empty");
+    public List<AnomalyRecordResponse> getByParameter(AirQualityParameter parameter, Instant start, Instant end) {
+        if (parameter == null) {
+            throw new IllegalArgumentException("Parameter cannot be null");
         }
 
         List<AnomalyRecord> anomalies = (start != null && end != null) ?
@@ -141,7 +141,6 @@ public class AnomalyRecordServiceImpl implements AnomalyRecordService {
                 .toList();
     }
 
-    // Helper methods
     private void validateTimeframe(Instant start, Instant end) {
         if (start == null || end == null) {
             throw new IllegalArgumentException("Start and end dates cannot be null");

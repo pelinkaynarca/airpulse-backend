@@ -1,6 +1,7 @@
 package com.airpulse.backend.repository;
 
 import com.airpulse.backend.entity.AnomalyRecord;
+import com.airpulse.backend.enums.AirQualityParameter;
 import com.airpulse.backend.enums.AnomalyType;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
@@ -43,13 +44,13 @@ public interface AnomalyRecordRepository extends JpaRepository<AnomalyRecord, Lo
 
     @Query("SELECT a FROM AnomalyRecord a JOIN a.measurement m " +
             "WHERE m.parameter = :parameter")
-    List<AnomalyRecord> findByParameter(@Param("parameter") String parameter);
+    List<AnomalyRecord> findByParameter(@Param("parameter") AirQualityParameter parameter);
 
     @Query("SELECT a FROM AnomalyRecord a JOIN a.measurement m " +
             "WHERE m.parameter = :parameter " +
             "AND a.detectedAt BETWEEN :start AND :end")
     List<AnomalyRecord> findByParameterAndTimeframe(
-            @Param("parameter") String parameter,
+            @Param("parameter") AirQualityParameter parameter,
             @Param("start") Instant start,
             @Param("end") Instant end);
 }

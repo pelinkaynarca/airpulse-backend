@@ -1,6 +1,7 @@
 package com.airpulse.backend.service;
 
 import com.airpulse.backend.dto.res.AnomalyRecordResponse;
+import com.airpulse.backend.enums.AirQualityParameter;
 import com.airpulse.backend.enums.AnomalyType;
 
 import java.time.Instant;
@@ -18,7 +19,7 @@ public interface AnomalyRecordService {
             Instant start, Instant end);
 
     // start datetime and end datetime can be null
-    List<AnomalyRecordResponse> getByParameter(String parameter, Instant start, Instant end);
+    List<AnomalyRecordResponse> getByParameter(AirQualityParameter parameter, Instant start, Instant end);
 
     List<AnomalyRecordResponse> getByType(AnomalyType anomalyType);
 
