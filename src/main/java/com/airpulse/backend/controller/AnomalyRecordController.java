@@ -1,6 +1,7 @@
 package com.airpulse.backend.controller;
 
 import com.airpulse.backend.dto.res.AnomalyRecordResponse;
+import com.airpulse.backend.enums.AirQualityParameter;
 import com.airpulse.backend.enums.AnomalyType;
 import com.airpulse.backend.service.AnomalyRecordService;
 import lombok.RequiredArgsConstructor;
@@ -22,27 +23,27 @@ public class AnomalyRecordController {
 
     @GetMapping("/{id}")
     public ResponseEntity<AnomalyRecordResponse> getAnomalyById(
-            @PathVariable Long id) {
+            @PathVariable(name = "id") Long id) {
         AnomalyRecordResponse response = anomalyRecordService.getById(id);
         return ResponseEntity.ok(response);
     }
 
     @GetMapping("/timeframe")
     public ResponseEntity<List<AnomalyRecordResponse>> getAnomaliesByTimeframe(
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
+            @RequestParam(name = "start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
+            @RequestParam(name = "end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
         List<AnomalyRecordResponse> anomalies = anomalyRecordService.getByTimeframe(start, end);
         return ResponseEntity.ok(anomalies);
     }
 
     @GetMapping("/region")
     public ResponseEntity<List<AnomalyRecordResponse>> getAnomaliesInRegion(
-            @RequestParam Double minLat,
-            @RequestParam Double maxLat,
-            @RequestParam Double minLon,
-            @RequestParam Double maxLon,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
+            @RequestParam(name = "minLat") Double minLat,
+            @RequestParam(name = "maxLat") Double maxLat,
+            @RequestParam(name = "minLon") Double minLon,
+            @RequestParam(name = "maxLon") Double maxLon,
+            @RequestParam(name = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
+            @RequestParam(name = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
         List<AnomalyRecordResponse> anomalies = anomalyRecordService.getInRegion(
                 minLat, maxLat, minLon, maxLon, start, end);
         return ResponseEntity.ok(anomalies);
@@ -50,23 +51,23 @@ public class AnomalyRecordController {
 
     @GetMapping("/parameter/{parameter}")
     public ResponseEntity<List<AnomalyRecordResponse>> getAnomaliesByParameter(
-            @PathVariable String parameter,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
+            @PathVariable(name = "parameter") AirQualityParameter parameter,
+            @RequestParam(name = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
+            @RequestParam(name = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
         List<AnomalyRecordResponse> anomalies = anomalyRecordService.getByParameter(parameter, start, end);
         return ResponseEntity.ok(anomalies);
     }
 
     @GetMapping("/type/{type}")
     public ResponseEntity<List<AnomalyRecordResponse>> getAnomaliesByType(
-            @PathVariable AnomalyType type) {
+            @PathVariable(name = "type") AnomalyType type) {
         List<AnomalyRecordResponse> anomalies = anomalyRecordService.getByType(type);
         return ResponseEntity.ok(anomalies);
     }
 
     @GetMapping("/latest")
     public ResponseEntity<List<AnomalyRecordResponse>> getLatest(
-            @RequestParam(defaultValue = "10") int limit) {
+            @RequestParam(name = "limit", defaultValue = "10") int limit) {
         List<AnomalyRecordResponse> anomalies = anomalyRecordService.getLatest(limit);
         return ResponseEntity.ok(anomalies);
     }

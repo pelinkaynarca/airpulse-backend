@@ -42,9 +42,9 @@ public class AirQualityMeasurementController {
 
     @GetMapping("/parameter")
     public ResponseEntity<List<AirQualityMeasurementResponse>> getMeasurementsByParameter(
-            @RequestParam AirQualityParameter parameter,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
+            @RequestParam(name = "parameter") AirQualityParameter parameter,
+            @RequestParam(name = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
+            @RequestParam(name = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
 
         List<AirQualityMeasurementResponse> measurements =
                 airQualityMeasurementService.getMeasurementsByParameter(parameter, start, end);
@@ -54,12 +54,12 @@ public class AirQualityMeasurementController {
 
     @GetMapping("/region")
     public ResponseEntity<List<AirQualityMeasurementResponse>> getMeasurementsInRegion(
-            @RequestParam Double minLat,
-            @RequestParam Double maxLat,
-            @RequestParam Double minLon,
-            @RequestParam Double maxLon,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
-            @RequestParam(required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
+            @RequestParam(name = "minLat") Double minLat,
+            @RequestParam(name = "maxLat") Double maxLat,
+            @RequestParam(name = "minLon") Double minLon,
+            @RequestParam(name = "maxLon") Double maxLon,
+            @RequestParam(name = "start", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
+            @RequestParam(name = "end", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
 
         List<AirQualityMeasurementResponse> measurements =
                 airQualityMeasurementService.getMeasurementsInRegion(minLat, maxLat, minLon, maxLon, start, end);
@@ -69,15 +69,15 @@ public class AirQualityMeasurementController {
 
     @GetMapping("/latest")
     public ResponseEntity<List<AirQualityMeasurementResponse>> getLatestMeasurements(
-            @RequestParam(defaultValue = "10") int limit) {
+            @RequestParam(name = "limit", defaultValue = "10") int limit) {
         List<AirQualityMeasurementResponse> measurements = airQualityMeasurementService.getLatestMeasurements(limit);
         return ResponseEntity.ok(measurements);
     }
 
     @GetMapping("/nearest")
     public ResponseEntity<AirQualityMeasurementResponse> getNearestAndLatestMeasurement(
-            @RequestParam double latitude,
-            @RequestParam double longitude) {
+            @RequestParam(name = "latitude") double latitude,
+            @RequestParam(name = "longitude") double longitude) {
         AirQualityMeasurementResponse response =
                 airQualityMeasurementService.getNearestAndLatestMeasurement(latitude, longitude);
         return ResponseEntity.ok(response);
@@ -85,13 +85,13 @@ public class AirQualityMeasurementController {
 
     @GetMapping("/average")
     public ResponseEntity<Double> getAverageForParameterInRegion(
-            @RequestParam AirQualityParameter parameter,
-            @RequestParam Double minLat,
-            @RequestParam Double maxLat,
-            @RequestParam Double minLon,
-            @RequestParam Double maxLon,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
-            @RequestParam @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
+            @RequestParam(name = "parameter") AirQualityParameter parameter,
+            @RequestParam(name = "minLat") Double minLat,
+            @RequestParam(name = "maxLat") Double maxLat,
+            @RequestParam(name = "minLon") Double minLon,
+            @RequestParam(name = "maxLon") Double maxLon,
+            @RequestParam(name = "start") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant start,
+            @RequestParam(name = "end") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE_TIME) Instant end) {
 
         Double average = airQualityMeasurementService.calculateAverageForParameterInRegionAndTimeframe(
                 parameter, minLat, maxLat, minLon, maxLon, start, end);
